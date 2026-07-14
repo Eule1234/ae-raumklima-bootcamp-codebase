@@ -1,17 +1,37 @@
-# Mock-API für das AE Raumklima Bootcamp
+# Raumklima-Backend (Node + Express)
 
-Dieses Verzeichnis enthält das **Mock-Backend** für die Lernenden-Webapp.
-Es liefert deterministische Sensordaten für die drei Schulungsräume **B101**, **B102** und **B103** und implementiert exakt den [API-Vertrag](../../ae-raumklima-bootcamp/docs/projekt/api-vertrag.md) aus dem Lernleitfaden.
+Dieses Verzeichnis enthält das **vollständige Backend** für das AE Raumklima Bootcamp. Es ist gleichzeitig:
 
-Die Mock-API ist so gebaut, dass sie nahtlos durch die spätere echte Sensor-API der Plattformentwickler ersetzt werden kann – die Lernenden müssen am Frontend nichts anpassen, sobald die echte API unter derselben URL und mit demselben Schema antwortet.
+- **Lokale Mock-API** für die Lernenden-Webapp (ohne Datenbank, im RAM)
+- **Echtes Backend** mit MySQL, das Sensordaten vom ESP/Plattform-Team entgegennimmt und persistiert
+- **Gleicher API-Vertrag** in beiden Modi – die Lernenden wechseln nie den Code, nur die Startweise
+
+## Architektur
+
+```
+┌────────────────────┐    POST /api/v1/ingest    ┌────────────────────┐
+│ ESP32 + DHT22      │ ─────────────────────────▶│  Node/Express      │
+│ (Plattform-Team)   │   X-API-Key Header        │  Backend           │
+│ Arduino IDE        │                           │  ┌──────────────┐  │
+└────────────────────┘                           │  │   MySQL 8    │  │
+                                                │  └──────────────┘  │
+                                                └──────────┬─────────┘
+                                                           │ GET
+                                                           ▼
+                                                ┌────────────────────┐
+                                                │  Lernenden-App     │
+                                                │  (HTML/CSS/JS)     │
+                                                └────────────────────┘
+```
 
 ## Endpunkte
 
-| Methode | Pfad                                            | Beschreibung                       |
-|---------|-------------------------------------------------|------------------------------------|
-| GET     | `/api/v1/rooms`                                 | Liste aller Räume                  |
-| GET     | `/api/v1/rooms/:roomId/measurements/latest`     | Aktuellster Messwert eines Raums   |
-| GET     | `/api/v1/rooms/:roomId/measurements?limit=10`   | Verlauf der letzten N Messwerte    |
+| Methode | Pfad                                          | Auth         | Zweck                          |
+|---------|-----------------------------------------------|--------------|--------------------------------|
+| GET     | `/api/v1/rooms`                               | –            | Liste der Räume                |
+| GET     | `/api/v1/rooms/:roomId/measurements/latest`   | –            | Aktuellster Messwert           |
+| GET     | `/api/v1/rooms/:roomId/measurements?limit=N`   | –            | Verlauf (neueste zuerst)       |
+| POST    | `/api/v1/ingest`                              | `X-API-Key`  | Sensordaten vom ESP empfangen  |
 
 ## Datenmodell
 
@@ -19,11 +39,17 @@ Die Mock-API ist so gebaut, dass sie nahtlos durch die spätere echte Sensor-API
 // Room
 { "id": "B101", "name": "Schulungsraum 101", "floor": 1 }
 
-// Measurement
-{ "room": "B101", "temperature": 23.4, "humidity": 51, "timestamp": "2026-07-14T10:30:00.000Z" }
+// Measurement (GET-Antwort und POST-Body sind identisch)
+{ "room": "B101", "temperature": 22.5, "humidity": 52, "timestamp": "2026-07-14T12:00:00.000Z" }
 ```
 
-## Lokal starten
+## Zwei Betriebsmodi
+
+Das Backend läuft wahlweise **mit oder ohne MySQL**. Der Modus wird über die env-Variable `USE_DB` gesteuert.
+
+### Modus 1: In-Memory (Standard für Lernende)
+
+Keine Datenbank nötig. Ideal für die Lernenden-Webapp – einfach starten, Daten sind da.
 
 ```bash
 cd mock-api
@@ -31,37 +57,108 @@ npm install
 npm start
 ```
 
-Danach ist die API erreichbar unter <http://localhost:3000> (Browser zeigt Übersicht) und <http://localhost:3000/api/v1> (API-Basis).
+→ läuft auf <http://localhost:3000>, Daten leben nur im RAM, deterministische Mock-Werte.
 
-Für Auto-Reload während der Entwicklung:
+### Modus 2: Mit MySQL (für Plattform-Team / Demo)
+
+Persistente Speicherung, PHPMyAdmin zur Inspektion. Ideal, wenn echte ESP-Daten reinlaufen oder die Daten einen Neustart überleben sollen.
 
 ```bash
-npm run dev
+cd mock-api
+docker compose up -d
 ```
 
-## Konfiguration
+Startet:
+- API auf <http://localhost:3000>
+- PHPMyAdmin auf <http://localhost:8080> (Login: `raumklima` / `raumklima`)
+- MySQL auf `localhost:3306` (intern via Container-Service `mysql`)
 
-Kopiere `.env.example` zu `.env` und passe die Werte an:
+Beim ersten Start wird das Schema automatisch angelegt und mit 3 Räumen + 50 historischen Messwerten pro Raum (deterministisch) gefüllt.
 
-| Variable           | Default | Bedeutung                                  |
-|--------------------|---------|--------------------------------------------|
-| `PORT`             | `3000`  | HTTP-Port                                  |
-| `ALLOWED_ORIGINS`  | `*`     | Kommagetrennte CORS-Whitelist (`*` = alle) |
+**Daten an die API schicken (Plattform-Team / ESP):**
 
-Für lokales Entwickeln reicht `*`. Sobald die API öffentlich deployt wird, sollte man die Origins einschränken (z. B. `https://username.github.io`).
+```bash
+curl -X POST http://localhost:3000/api/v1/ingest \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: change-me-please" \
+  -d '{"room":"B101","temperature":22.5,"humidity":52,"timestamp":"2026-07-14T12:00:00Z"}'
+```
+
+Der API-Key steht in `.env` (`INGEST_API_KEY`). Im Produktivbetrieb durch einen sicheren Wert ersetzen.
+
+**Daten in PHPMyAdmin ansehen:**
+1. <http://localhost:8080> öffnen
+2. Login `raumklima` / `raumklima`
+3. Datenbank `raumklima` → Tabelle `measurements`
+
+### Stoppen
+
+```bash
+# Modus 1: Ctrl+C im Terminal
+# Modus 2:
+docker compose down          # Container stoppen
+docker compose down -v       # zusätzlich MySQL-Volume löschen (alle Messwerte weg)
+```
+
+## Konfiguration (`.env`)
+
+Kopiere `.env.example` zu `.env` und passe an:
+
+| Variable           | Default                         | Bedeutung                                                |
+|--------------------|---------------------------------|----------------------------------------------------------|
+| `PORT`             | `3000`                          | HTTP-Port                                                |
+| `ALLOWED_ORIGINS`  | `*`                             | CORS-Whitelist (Komma-getrennt)                          |
+| `USE_DB`           | `false`                         | `true` = MySQL-Modus, `false` = In-Memory                |
+| `MYSQL_HOST`       | `localhost`                     | MySQL-Host (in Docker: `mysql`)                          |
+| `MYSQL_PORT`       | `3306`                          | MySQL-Port                                               |
+| `MYSQL_USER`       | `raumklima`                     | MySQL-User                                               |
+| `MYSQL_PASSWORD`   | `raumklima`                     | MySQL-Passwort                                           |
+| `MYSQL_DATABASE`   | `raumklima`                     | Datenbankname                                            |
+| `INGEST_API_KEY`   | `change-me-please`              | API-Key für `POST /api/v1/ingest` (Header `X-API-Key`)   |
+| `NPM_REGISTRY`     | `https://registry.npmjs.org/    | npm-Registry (für Docker-Build bei Firmen-Proxy)         |
+| `CA_CERT_PATH`     | (leer)                          | Pfad zum CA-Zert (für Firmen-Proxy)                      |
+
+## Firmen-Proxy (Nexus, Artifactory, …) im Docker-Build
+
+Wenn dein Rechner hinter einem Firmen-Proxy sitzt und der Build-Container keinen direkten Internet-Zugriff hat, passiert das `npm install` auf deinem **Host** (mit deiner normalen npm-Config, inkl. Nexus/Cert). Das fertige `node_modules` wird dann ins Image kopiert. Dafür ist kein zusätzliches Setup nötig – `docker compose up` funktioniert direkt.
+
+Falls du den API-Container selbst noch nachinstallieren lassen willst (z. B. für `npm install` im Debug-Modus):
+
+1. CA-Zert unter `certs/corp-root.cer` ablegen (wird nicht committet)
+2. In `.env` setzen:
+   ```
+   NPM_REGISTRY=https://nexus.example.com/repository/npm-all/
+   CA_CERT_PATH=./certs/corp-root.cer
+   ```
+3. `docker compose build`
+
+## Test-Beispiele
+
+```bash
+# Räume abfragen
+curl http://localhost:3000/api/v1/rooms
+
+# Letzte Messung B101
+curl http://localhost:3000/api/v1/rooms/B101/measurements/latest
+
+# Verlauf B102 (10 Werte)
+curl "http://localhost:3000/api/v1/rooms/B102/measurements?limit=10"
+
+# Messung senden (Plattform-Team / ESP)
+curl -X POST http://localhost:3000/api/v1/ingest \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: change-me-please" \
+  -d '{"room":"B101","temperature":22.5,"humidity":52,"timestamp":"2026-07-14T12:00:00Z"}'
+```
 
 ## Daten-Charakter
 
-Die Daten sind **deterministisch** (kein random Seed-Reset nötig) und enthalten pro Raum leicht unterschiedliche Basistemperaturen und -feuchtigkeiten, damit die Lernenden alle drei Statuswerte (gut, kritisch, schlecht) antreffen können:
+Pro Raum sind die Basistemperaturen und -feuchtigkeiten so gewählt, dass alle drei Statuswerte (gut / kritisch / schlecht) realistisch vorkommen:
 
-| Raum | Basis-Temp | Basis-Feuchte | Beobachtbarer Status   |
-|------|------------|---------------|------------------------|
-| B101 | 22.0 °C    | 50 %          | meist `gut`            |
-| B102 | 25.0 °C    | 45 %          | oft `kritisch`         |
-| B103 | 19.0 °C    | 65 %          | oft `kritisch`/`schlecht` |
+| Raum | Basis-Temp | Basis-Feuchte | Beobachtbarer Status     |
+|------|------------|---------------|--------------------------|
+| B101 | 22.0 °C    | 50 %          | meist `gut`              |
+| B102 | 25.0 °C    | 45 %          | oft `kritisch`           |
+| B103 | 17.5 °C    | 72 %          | oft `kritisch`/`schlecht`|
 
-Die 50 letzten Messwerte pro Raum werden im 15-Minuten-Abstand generiert.
-
-## Deployment
-
-Wird in einem späteren Schritt festgelegt. Mögliche Ziele: Render, Railway, Fly.io (alle mit Gratis-Tier für solche Demos).
+Die 50 initialen Messwerte pro Raum werden im 15-Minuten-Abstand generiert, ausgehend von der aktuellen Zeit.
