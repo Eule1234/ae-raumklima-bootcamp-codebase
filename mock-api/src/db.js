@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS measurements (
   temperature DECIMAL(4,1) NOT NULL,
   humidity TINYINT UNSIGNED NOT NULL,
   measured_at DATETIME NOT NULL,
+  extras JSON NULL,
   INDEX idx_room_time (room_id, measured_at DESC),
   CONSTRAINT fk_measurements_room FOREIGN KEY (room_id) REFERENCES rooms(id)
     ON DELETE CASCADE

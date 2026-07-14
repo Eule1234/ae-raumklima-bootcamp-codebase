@@ -8,11 +8,25 @@ import { getPool } from './db.js';
 // ---------- In-Memory Daten ----------
 
 const ROOMS = [
-  // Variiert so, dass alle drei Statuswerte (gut / kritisch / schlecht)
+  // Variiert so, dass alle drei Statuswerte (gut / mittel / kritisch)
   // realistisch in der App sichtbar werden.
   { id: 'B101', name: 'Schulungsraum 101', floor: 1, baseTemp: 22.0, baseHumidity: 50, tempJitter: 1.6, humJitter: 6 },
   { id: 'B102', name: 'Schulungsraum 102', floor: 1, baseTemp: 25.0, baseHumidity: 45, tempJitter: 2.0, humJitter: 8 },
-  { id: 'B103', name: 'Schulungsraum 103', floor: 1, baseTemp: 17.5, baseHumidity: 72, tempJitter: 2.4, humJitter: 8 },
+  {
+    id: 'B103',
+    name: 'Schulungsraum 103',
+    floor: 1,
+    baseTemp: 17.5,
+    baseHumidity: 72,
+    tempJitter: 2.4,
+    humJitter: 8,
+    // Beispiel für optionale Sensoren – B103 hat zusätzlich CO2 und Licht.
+    // Lernende können diese in einem optionalen Feature anzeigen.
+    extras: {
+      co2:   { base: 650, jitter: 200 },
+      light: { base: 320, jitter: 80 },
+    },
+  },
 ];
 
 function mulberry32(seed) {
@@ -50,7 +64,18 @@ function buildSeedMeasurements(room, count, intervalMinutes) {
       temperature: Math.round((room.baseTemp + tempJitter) * 10) / 10,
       humidity: Math.round(room.baseHumidity + humJitter),
       timestamp: ts.toISOString(),
+      extras: room.extras ? buildExtras(room, rand) : null,
     });
+  }
+  return out;
+}
+
+function buildExtras(room, rand) {
+  // Beispielwerte für optionale Sensoren – nur in Räumen mit `extras` gesetzt.
+  const out = {};
+  for (const [key, cfg] of Object.entries(room.extras)) {
+    const value = cfg.base + (rand() - 0.5) * 2 * cfg.jitter;
+    out[key] = Number.isInteger(cfg.base) ? Math.round(value) : Math.round(value * 10) / 10;
   }
   return out;
 }
@@ -98,7 +123,7 @@ export async function roomExistsAsync(roomId) {
 export async function getLatestMeasurement(roomId) {
   if (isDb()) {
     const [rows] = await getPool().query(
-      'SELECT room_id AS room, temperature, humidity, measured_at AS timestamp ' +
+      'SELECT room_id AS room, temperature, humidity, measured_at AS timestamp, extras ' +
         'FROM measurements WHERE room_id = ? ORDER BY measured_at DESC LIMIT 1',
       [roomId],
     );
@@ -112,7 +137,7 @@ export async function getHistory(roomId, limit) {
   const n = Math.max(1, Math.min(limit ?? 10, 500));
   if (isDb()) {
     const [rows] = await getPool().query(
-      'SELECT room_id AS room, temperature, humidity, measured_at AS timestamp ' +
+      'SELECT room_id AS room, temperature, humidity, measured_at AS timestamp, extras ' +
         'FROM measurements WHERE room_id = ? ORDER BY measured_at DESC LIMIT ?',
       [roomId, n],
     );
@@ -123,12 +148,13 @@ export async function getHistory(roomId, limit) {
   return data.slice(0, n);
 }
 
-export async function addMeasurement({ room, temperature, humidity, timestamp }) {
+export async function addMeasurement({ room, temperature, humidity, timestamp, extras }) {
   if (isDb()) {
     const ts = parseTimestamp(timestamp);
+    const extrasJson = extras ? JSON.stringify(extras) : null;
     await getPool().query(
-      'INSERT INTO measurements (room_id, temperature, humidity, measured_at) VALUES (?, ?, ?, ?)',
-      [room, temperature, humidity, ts],
+      'INSERT INTO measurements (room_id, temperature, humidity, measured_at, extras) VALUES (?, ?, ?, ?, ?)',
+      [room, temperature, humidity, ts, extrasJson],
     );
     return true;
   }
@@ -136,7 +162,8 @@ export async function addMeasurement({ room, temperature, humidity, timestamp })
     room,
     temperature,
     humidity,
-    timestamp: (timestamp || new Date().toISOString()),
+    timestamp: timestamp || new Date().toISOString(),
+    extras: extras ?? null,
   });
 }
 
@@ -146,7 +173,19 @@ function mapMeasurementRow(row) {
     temperature: Number(row.temperature),
     humidity: Number(row.humidity),
     timestamp: row.timestamp instanceof Date ? row.timestamp.toISOString() : row.timestamp,
+    // mysql2 parst JSON-Spalten automatisch; bei In-Memory ist es schon ein Objekt.
+    extras: parseExtras(row.extras),
   };
+}
+
+function parseExtras(value) {
+  if (value === null || value === undefined) return null;
+  if (typeof value === 'object') return value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
 }
 
 function parseTimestamp(value) {

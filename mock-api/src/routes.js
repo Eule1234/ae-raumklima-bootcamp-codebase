@@ -39,7 +39,7 @@ router.get('/rooms/:roomId/measurements', async (req, res) => {
 // POST: Sensordaten entgegennehmen.
 // Auth: X-API-Key Header (siehe middleware/auth.js)
 router.post('/ingest', requireApiKey, async (req, res) => {
-  const { room, temperature, humidity, timestamp } = req.body ?? {};
+  const { room, temperature, humidity, timestamp, extras } = req.body ?? {};
 
   if (typeof room !== 'string' || room.length === 0) {
     return res.status(400).json({ error: 'Feld "room" fehlt oder ist leer', code: 400 });
@@ -56,12 +56,18 @@ router.post('/ingest', requireApiKey, async (req, res) => {
       return res.status(400).json({ error: 'Feld "timestamp" ist kein gültiges ISO-Datum', code: 400 });
     }
   }
+  if (extras !== undefined && (extras === null || typeof extras !== 'object' || Array.isArray(extras))) {
+    return res.status(400).json({
+      error: 'Feld "extras" muss ein Objekt sein (z. B. {"co2": 450, "light": 300})',
+      code: 400,
+    });
+  }
 
   if (!(await roomExistsAsync(room))) {
     return res.status(404).json({ error: `Unbekannter Raum: ${room}`, code: 404 });
   }
 
-  await addMeasurement({ room, temperature, humidity, timestamp });
+  await addMeasurement({ room, temperature, humidity, timestamp, extras });
   res.status(201).json({ status: 'accepted', room, timestamp: timestamp || new Date().toISOString() });
 });
 
