@@ -1,12 +1,52 @@
-# Raumklima-Backend (Node + Express)
+# Raumklima-Backend (Node + Express) – ⚠️ DEPRECATED
 
-Dieses Verzeichnis enthält das **vollständige Backend** für das AE Raumklima Bootcamp. Es ist gleichzeitig:
+!!! warning "Nicht mehr Bootcamp-Wahrheit"
+    Diese Mock-API ist **nicht mehr** die offizielle Datenquelle für
+    das Bootcamp. Das aktuelle Backend ist das **SuvaSense-Backend**
+    im Schwester-Repo `SuvaSense` (siehe [Architektur-Doku](https://ae-raumklima-bootcamp.readthedocs.io/)).
 
-- **Lokale Mock-API** für die Lernenden-Webapp (ohne Datenbank, im RAM)
-- **Echtes Backend** mit MySQL, das Sensordaten vom ESP/Plattform-Team entgegennimmt und persistiert
-- **Gleicher API-Vertrag** in beiden Modi – die Lernenden wechseln nie den Code, nur die Startweise
+    Der Ordner bleibt im Repo als **pädagogisches Beispiel** für eine
+    Node/Express-API mit MySQL-Anbindung. Lernende dürfen ihn gerne
+    lesen, **aber nicht produktiv im Bootcamp nutzen**.
 
-## Architektur
+!!! danger "Für Lernende: nicht verwenden!"
+    Deine App im `app/`-Ordner spricht **direkt** mit dem
+    SuvaSense-Backend. Du brauchst diese Mock-API nicht zu starten
+    und auch keine Daten hier reinzuschicken.
+
+## Was bleibt
+
+Der Ordner demonstriert:
+
+- Eine einfache Node/Express-REST-API mit zwei Betriebsmodi (RAM/MySQL)
+- Eingabevalidierung mit `X-API-Key`-Auth-Header
+- CORS-Handling
+- Docker-Compose-Setup mit MySQL + PHPMyAdmin
+
+Wer selbst eine Express-API lernen will, kann den Code gerne als
+Vorlage verwenden.
+
+## Migration auf SuvaSense
+
+| Aspekt | Diese Mock-API | SuvaSense |
+|---|---|---|
+| Endpoints | `/api/v1/rooms/...` | `/api/v1/sensors/...` |
+| Identität | Raum-ID (`B101`) | Seriennummer (`SN12345`) |
+| Ingest | HTTP POST, X-API-Key | MQTT, anonym |
+| Datenmodell | flach (`temperature`/`humidity`) | Push-Bundle pro MQTT-Message |
+| Persistenz | MySQL oder RAM | Postgres |
+| Stack | Node + Express | Go + Postgres + Mosquitto |
+
+Ausführliche Migration im Schwester-Repo `ae-raumklima-bootcamp`:
+- [API-Vertrag](https://ae-raumklima-bootcamp.readthedocs.io/projekt/api-vertrag/)
+- [Architektur](https://ae-raumklima-bootcamp.readthedocs.io/projekt/architektur/)
+
+---
+
+Der nachfolgende Original-Inhalt bleibt für Nachschlagezwecke erhalten.
+```
+
+## Architektur (historisch)
 
 ```
 ┌────────────────────┐    POST /api/v1/ingest    ┌────────────────────┐
@@ -14,14 +54,14 @@ Dieses Verzeichnis enthält das **vollständige Backend** für das AE Raumklima 
 │ (Plattform-Team)   │   X-API-Key Header        │  Backend           │
 │ Arduino IDE        │                           │  ┌──────────────┐  │
 └────────────────────┘                           │  │   MySQL 8    │  │
-                                                │  └──────────────┘  │
-                                                └──────────┬─────────┘
-                                                           │ GET
-                                                           ▼
-                                                ┌────────────────────┐
-                                                │  Lernenden-App     │
-                                                │  (HTML/CSS/JS)     │
-                                                └────────────────────┘
+                                                 │  └──────────────┘  │
+                                                 └──────────┬─────────┘
+                                                            │ GET
+                                                            ▼
+                                                 ┌────────────────────┐
+                                                 │  Lernenden-App     │
+                                                 │  (HTML/CSS/JS)     │
+                                                 └────────────────────┘
 ```
 
 ## Endpunkte
