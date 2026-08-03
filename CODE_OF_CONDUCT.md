@@ -1,6 +1,6 @@
 # Verhaltenskodex für Mitwirkende
 
-Willkommen beim **AE Raumklima Bootcamp**! Dieses Repository enthält den Code, den die Lernenden während des fünftägigen Bootcamps schreiben – eine Web-App zur Überwachung des Raumklimas in Lernräumen (Temperatur, Luftfeuchtigkeit, Status, Verlauf). Wenn du einen Beitrag leisten möchtest – sei es durch Bugfixes, neue Features, Verbesserungen am UI oder am Mock-Backend – bitten wir dich, die folgenden Regeln und Abläufe zu beachten. Sie sorgen dafür, dass das Projekt übersichtlich, nachvollziehbar und für alle zugänglich bleibt.
+Willkommen beim **AE Raumklima Bootcamp**! Dieses Repository enthält den Code, den die Lernenden während des fünftägigen Bootcamps schreiben – eine Web-App, die Sensordaten aus dem **SuvaSense-Backend** anzeigt (Temperatur, Luftfeuchtigkeit, Status, Verlauf). Wenn du einen Beitrag leisten möchtest – sei es durch Bugfixes, neue Features, Verbesserungen am UI – bitten wir dich, die folgenden Regeln und Abläufe zu beachten. Sie sorgen dafür, dass das Projekt übersichtlich, nachvollziehbar und für alle zugänglich bleibt.
 
 ---
 
@@ -95,11 +95,15 @@ Da wir reines HTML, CSS und JavaScript ohne Build-Tool entwickeln, gibt es **kei
 ### 3.2 Sauberkeit
 
 - Sei präzise. Lieber eine kleine, saubere Änderung als ein grosser, halbfertiger Patch.
-- Halte dich an bestehende Patterns: Klassennamen in CSS (`gut`, `kritisch`, `schlecht`), JSON-Feldnamen aus dem API-Vertrag, deutschsprachige Commit-Messages (oder Englisch – aber konsistent).
+- Halte dich an bestehende Patterns: Klassennamen in CSS (`gut`, `kritisch`, `schlecht`), JSON-Feldnamen aus dem API-Vertrag (z. B. `readings.bme680.temp_c`), deutschsprachige Commit-Messages (oder Englisch – aber konsistent).
 
 ### 3.3 Keine Secrets committen
 
 Tokens, Passwörter, API-Keys oder interne URLs gehören **nicht** ins Repo. Verwende `.env`-Dateien (siehe `mock-api/.env.example`) und `.gitignore`.
+
+### 3.4 Backend nicht verändern
+
+Das **SuvaSense-Backend** (im Schwester-Repo `SuvaSense`) wird vom Trainerteam verwaltet. Du arbeitest **ausschliesslich** im `app/`-Ordner dieses Repos. Der alte `mock-api/`-Ordner bleibt für pädagogische Zwecke im Repo, ist aber **nicht** Bootcamp-Wahrheit – ignoriere ihn für die App-Entwicklung.
 
 ---
 
