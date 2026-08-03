@@ -86,10 +86,10 @@ git branch -d dein-branch-name
 
 ### 3.1 Testen vor dem Commit
 
-Da wir reines HTML, CSS und JavaScript ohne Build-Tool entwickeln, gibt es **kein** `npm run build`. Stattdessen testest du so:
+Da wir reines HTML, CSS und JavaScript ohne Build-Tool entwickeln, gibt es **kein** `npm run build`. Stattdem testest du so:
 
 - **App-Code (`app/`)**: Live Server in VS Code starten, Seite im Browser öffnen, F12-Devtools auf Fehler prüfen, manuell durchklicken.
-- **Mock-API (`mock-api/`)**: `npm start` und die Endpoints mit `curl`, dem Browser oder dem VS-Code-RestClient-Plugin prüfen.
+- **Datenquelle**: Das SuvaSense-Backend wird vom Trainerteam betrieben. Zum lokalen Testen ohne Backend kann der Test-Server aus dem Schwester-Ordner `Test-Frontend/test-server.py` verwendet werden.
 - **Dokumentation (`docs/`)**: Markdown-Renderer (Vorschau in VS Code oder `mkdocs serve` im Schwester-Repo) prüfen.
 
 ### 3.2 Sauberkeit
@@ -99,11 +99,11 @@ Da wir reines HTML, CSS und JavaScript ohne Build-Tool entwickeln, gibt es **kei
 
 ### 3.3 Keine Secrets committen
 
-Tokens, Passwörter, API-Keys oder interne URLs gehören **nicht** ins Repo. Verwende `.env`-Dateien (siehe `mock-api/.env.example`) und `.gitignore`.
+Tokens, Passwörter, API-Keys oder interne URLs gehören **nicht** ins Repo. Verwende `.env`-Dateien (lokal ausserhalb des Repos) und `.gitignore`. Im Zweifel: beim Trainer nachfragen, bevor etwas eingecheckt wird.
 
 ### 3.4 Backend nicht verändern
 
-Das **SuvaSense-Backend** (im Schwester-Repo `SuvaSense`) wird vom Trainerteam verwaltet. Du arbeitest **ausschliesslich** im `app/`-Ordner dieses Repos. Der alte `mock-api/`-Ordner bleibt für pädagogische Zwecke im Repo, ist aber **nicht** Bootcamp-Wahrheit – ignoriere ihn für die App-Entwicklung.
+Das **SuvaSense-Backend** (im Schwester-Repo `SuvaSense`) wird vom Trainerteam verwaltet. Du arbeitest **ausschliesslich** im `app/`-Ordner dieses Repos. Es gibt in diesem Repo **kein** lokales Backend mehr – die App spricht direkt mit SuvaSense.
 
 ---
 
