@@ -20,7 +20,7 @@ In diesem Ordner entwickeln die Lernenden ihre **Raumklima-Monitor-Webapp**.
 ## Datenquelle
 
 Die App lädt ihre Daten vom **SuvaSense-Backend**, das vom Trainerteam
-zentral bereitgestellt wird (nicht mehr von der lokalen Mock-API).
+zentral bereitgestellt wird.
 
 Aktuelle `API_BASE` und Demo-Seriennummer einsetzen in `script.js`:
 
@@ -34,7 +34,8 @@ Die Snapshot-Strategie (API → localStorage → Seed) ist in
 
 ## Wichtig
 
-- **Berühre `../mock-api/` nicht.** Der Ordner bleibt für pädagogische
-  Zwecke im Repo, ist aber **nicht** Bootcamp-Wahrheit.
+- **Es gibt kein lokales Backend in diesem Repo.** Deine App spricht
+  direkt mit dem SuvaSense-Backend im Schwester-Repo. URL und
+  Seriennummer kommen vom Trainer.
 - Eigener Code gehört ausschliesslich in diesen `app/`-Ordner.
 - Eigene Commits auf eigene Feature-Branches (siehe `CODE_OF_CONDUCT.md`).
