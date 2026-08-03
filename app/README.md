@@ -20,7 +20,7 @@ In diesem Ordner entwickeln die Lernenden ihre **Raumklima-Monitor-Webapp**.
 ## Datenquelle
 
 Die App lädt ihre Daten vom **SuvaSense-Backend**, das vom Trainerteam
-zentral bereitgestellt wird (nicht mehr von der lokalen Mock-API).
+zentral bereitgestellt wird.
 
 Aktuelle `API_BASE` und Demo-Seriennummer einsetzen in `script.js`:
 
