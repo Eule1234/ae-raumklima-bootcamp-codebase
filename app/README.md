@@ -7,7 +7,8 @@ In diesem Ordner entwickeln die Lernenden ihre **Raumklima-Monitor-Webapp**.
 - `index.html` – Grundgerüst der Seite
 - `style.css` – Styling (Layout, Farben, Statusklassen `.gut`, `.kritisch`, `.schlecht`)
 - `script.js` – Logik (Daten laden, Status berechnen, Verlauf rendern)
-- `data.json` *(ab Tag 2)* – Lokale Fallback-Daten, falls die API nicht erreichbar ist
+- `data.json` *(ab Tag 2)* – Initial-Seed im Push-Bundle-Format (Snapshot-Fallback Stufe 3)
+- `snapshot-strategie.md` – Kurzfassung der dreistufigen Fallback-Logik
 
 ## Setup
 
@@ -16,14 +17,24 @@ In diesem Ordner entwickeln die Lernenden ihre **Raumklima-Monitor-Webapp**.
 3. Rechtsklick auf `index.html` → "Open with Live Server"
 4. Browser öffnet sich automatisch
 
-## API-Anbindung (ab Tag 3)
+## Datenquelle
 
-Die App lädt ihre Daten aus der Mock-API unter `../mock-api/` (oder einer deployten URL – siehe Tag-3-Leitfaden).
+Die App lädt ihre Daten vom **SuvaSense-Backend**, das vom Trainerteam
+zentral bereitgestellt wird (nicht mehr von der lokalen Mock-API).
 
-Aktuelle `API_BASE` einsetzen in `script.js`:
+Aktuelle `API_BASE` und Demo-Seriennummer einsetzen in `script.js`:
 
 ```js
-const API_BASE = 'http://localhost:3000/api/v1'; // während Entwicklung
-// const API_BASE = 'https://mock.raumklima-bootcamp.dev/api/v1'; // deployed
-const USE_API = true;
+const API_BASE = 'http://<vom-trainer-bekanntgegeben>:8080/api/v1';
+let currentSerial = 'SN12345';   // Demo-Seriennummer vom Trainer
 ```
+
+Die Snapshot-Strategie (API → localStorage → Seed) ist in
+`snapshot-strategie.md` ausführlich beschrieben.
+
+## Wichtig
+
+- **Berühre `../mock-api/` nicht.** Der Ordner bleibt für pädagogische
+  Zwecke im Repo, ist aber **nicht** Bootcamp-Wahrheit.
+- Eigener Code gehört ausschliesslich in diesen `app/`-Ordner.
+- Eigene Commits auf eigene Feature-Branches (siehe `CODE_OF_CONDUCT.md`).
