@@ -1,49 +1,92 @@
-# AE Raumklima Bootcamp – Codebase
+# AE Raumklima Bootcamp – Codebase (dein Fork)
 
-In diesem Repository arbeiten die Lernenden während des fünftägigen Bootcamps an ihrer Web-App. Die App spricht direkt mit dem **SuvaSense-Backend** im Schwester-Repo `SuvaSense` – ihr braucht **kein lokales Backend** zu starten.
+!!! danger "KI ist komplett verboten"
+    Während des Bootcamps darfst du **keine KI-Tools** verwenden – nicht für Fragen, nicht für Code, nicht für Erklärungen. Siehe [`app/QUELLEN.md`](app/QUELLEN.md) für die erlaubten Alternativen (W3Schools, MDN).
+
+## Was ist das hier?
+
+Das ist dein **eigener Fork** des Codebase-Repos vom AE Raumklima
+Bootcamp. Hier arbeitest du **alleine** an deiner
+Raumklima-Monitor-Web-App.
+
+Du arbeitest im Ordner `app/` und schreibst dort:
+
+- `index.html` – Struktur der Seite
+- `style.css` – Layout und Farben
+- `script.js` – Logik und Daten laden
+- `data.json` *(ab Tag 2)* – Initial-Seed
+
+Alles andere in diesem Repo lässt du in Ruhe.
+
+## Setup (einmalig)
+
+Falls du das noch nicht gemacht hast:
+
+1. **Auf GitHub forken:** Klicke oben rechts auf der
+   [Original-Repo-Seite](https://github.com/HeiligerG/ae-raumklima-bootcamp-codebase)
+   auf **Fork** und wähle deinen Account als Ziel.
+2. **Deinen Fork klonen:**
+   ```bash
+   git clone https://github.com/<DEIN-USERNAME>/ae-raumklima-bootcamp-codebase.git
+   ```
+3. **VS Code öffnen:**
+   ```bash
+   cd ae-raumklima-bootcamp-codebase
+   code .
+   ```
+4. **Live Server starten:** Rechtsklick auf `app/index.html` →
+   **Open with Live Server** (Extension installieren falls nötig)
+
+Du brauchst nur **drei** Git-Befehle:
+
+```bash
+git add .                    # Änderungen vormerken
+git commit -m "Was ich gemacht habe"   # Commit erstellen
+git push                     # Auf deinen Fork hochladen
+```
+
+Mehr brauchst du nicht. Keine Pull Requests, kein Branch-Workflow.
+Du arbeitest direkt auf `main` in deinem Fork.
+
+## Wann bist du fertig?
+
+Nach Tag 5 (Donnerstag) hast du eine funktionierende App. Der
+Trainer schaut in alle Forks rein. Keine Bewertung – nur eine
+gemeinsame Demo am Ende der Woche.
+
+## Hilfe
+
+In dieser Reihenfolge:
+
+1. **W3Schools** – [`app/QUELLEN.md`](app/QUELLEN.md) hat eine
+   vollständige Liste mit direkten Links zu HTML, CSS, JS, DOM,
+   Fetch, JSON, LocalStorage
+2. **MDN** (Mozilla Developer Network) – für tiefergehende Details
+3. **DevTools (F12)** – Konsole zeigt oft die Antwort
+4. **Trainer fragen** – 1:1, kurze präzise Frage
+
+**Was du NICHT tust:** KI-Tools verwenden (verboten), von
+Mitlernenden Code abschreiben (Einzelarbeit).
 
 ## Inhalt
 
-| Pfad        | Zweck                                                                 |
-|-------------|-----------------------------------------------------------------------|
-| `app/`      | **Hier arbeiten die Lernenden.** Enthält ihre `index.html`, `style.css`, `script.js`, `data.json` (ab Tag 2) und `snapshot-strategie.md` (Notiz für Tag 3). |
-| `CODE_OF_CONDUCT.md` | Verhaltens- und Git-Workflow-Regeln für alle Mitwirkenden.    |
+| Pfad | Zweck |
+|------|-------|
+| `app/` | **Hier arbeitest du.** Enthält `index.html`, `style.css`, `script.js`, `data.json` und Notizen. |
+| `app/QUELLEN.md` | **Lies das zuerst.** W3Schools-Links + KI-Verbot. |
+| `app/README.md` | Setup deines `app/`-Ordners im Detail. |
+| `app/snapshot-strategie.md` | Wie dein Code mit dem Backend funktioniert (Snapshot-Fallback). |
+| `CODE_OF_CONDUCT.md` | Verhaltensregeln (auch im Lernleitfaden). |
+| `README.md` | Diese Datei. |
 
-## Schnellstart für Lernende (Tag 1)
+## Weitere Dokumentation
 
-```bash
-# 1. Codebase im Editor öffnen
-code app/
+Der vollständige Lernleitfaden (Theorie, Übungen, Projekte) ist
+online verfügbar unter:
+<https://heiligerg.github.io/ae-raumklima-bootcamp/>
 
-# 2. index.html, style.css, script.js anlegen
-#    (gemäss Anleitung im Lernleitfaden, Tag 1)
-
-# 3. Live Server in VS Code starten (Rechtsklick auf index.html)
-```
-
-## Datenquelle ab Tag 3
-
-Die App lädt ihre Daten vom **SuvaSense-Backend** (Go + Postgres + Mosquitto),
-das vom Trainerteam zentral bereitgestellt wird. Die konkrete URL und die
-Demo-Seriennummer werden am Tag 3 vom Trainer bekanntgegeben.
-
-Wenn ihr offline testen wollt, nutzt den mitgelieferten `data.json`-Seed
-(siehe `app/snapshot-strategie.md`) oder den Test-Server aus dem
-Schwester-Ordner `../Test-Frontend/test-server.py`.
-
-## Ein Prozess, ein Projekt
-
-Im Bootcamp läuft nur **ein** Prozess auf eurem Laptop: der Live Server für die App.
-
-| Prozess        | Wo                                         | URL                        |
-|----------------|--------------------------------------------|----------------------------|
-| App + Live Server | VS Code Live Server auf `app/index.html` | `http://127.0.0.1:5500`    |
-| SuvaSense-Backend | Trainer-Laptop oder Schulungs-Server    | `http://<vom-trainer>:8080` |
-
-Die App im Browser ruft die API über `fetch()` auf – genau so, wie eine echte Web-App ein echtes Backend ansprechen würde.
-
-## Wichtig für Lernende
-
-- **Eigener Code gehört ausschliesslich in `app/`** – nirgendwo sonst in diesem Repo.
-- Eigene Commits auf eigene Feature-Branches (siehe `CODE_OF_CONDUCT.md` § 2).
-- Das SuvaSense-Backend wird vom Trainerteam verwaltet – **nicht verändern**.
+!!! tip "Erste Schritte"
+    1. Lies [`app/QUELLEN.md`](app/QUELLEN.md) – KI-Verbot und
+       W3Schools-Links
+    2. Lies [`app/README.md`](app/README.md) – Setup deines `app/`-Ordners
+    3. Fang an mit Tag 1: erstelle `app/index.html` und `app/style.css`

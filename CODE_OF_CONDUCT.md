@@ -1,135 +1,116 @@
-# Verhaltenskodex für Mitwirkende
+# Verhaltenskodex
 
-Willkommen beim **AE Raumklima Bootcamp**! Dieses Repository enthält den Code, den die Lernenden während des fünftägigen Bootcamps schreiben – eine Web-App, die Sensordaten aus dem **SuvaSense-Backend** anzeigt (Temperatur, Luftfeuchtigkeit, Status, Verlauf). Wenn du einen Beitrag leisten möchtest – sei es durch Bugfixes, neue Features, Verbesserungen am UI – bitten wir dich, die folgenden Regeln und Abläufe zu beachten. Sie sorgen dafür, dass das Projekt übersichtlich, nachvollziehbar und für alle zugänglich bleibt.
+Willkommen beim **AE Raumklima Bootcamp**! Dieses Repository
+enthält den Code, den **du alleine** während des fünftägigen
+Bootcamps schreibst – eine Web-App, die Sensordaten aus dem
+**SuvaSense-Backend** anzeigt (Temperatur, Luftfeuchtigkeit,
+Status, Verlauf). Wenn du Fragen hast oder Hilfe brauchst, lies
+diese Regeln.
+
+!!! danger "KI ist verboten"
+    Während des Bootcamps darfst du **keine KI-Tools** verwenden – nicht für Fragen, nicht für Code, nicht für Erklärungen, nicht für "kleine Hilfen". Das gilt für **alle** KI-Tools: ChatGPT, Copilot, Claude, Gemini, Cursor, Windsurf, alle anderen.
+
+    **Was stattdessen?** Siehe [`app/QUELLEN.md`](app/QUELLEN.md) für W3Schools und MDN.
 
 ---
 
 ## 1. Respektvoller Umgang
 
-- **Sei freundlich und geduldig.** Viele Mitwirkende sind am Anfang ihrer Lernreise. Konstruktives Feedback ist willkommen, herablassende Kommentare sind es nicht.
-- **Hilf anderen.** Wenn du eine Frage beantworten oder ein Problem erklären kannst, tu es gerne.
-- **Akzeptiere unterschiedliche Erfahrungsstufen.** Es gibt keine "dummen" Fragen oder Beiträge.
+- **Sei freundlich und geduldig.** Auch wenn du allein arbeitest,
+  bist du Teil einer Lerngruppe – frag den Trainer, wenn du
+  nicht weiterkommst.
+- **Akzeptiere unterschiedliche Erfahrungsstufen.** Es gibt keine
+  "dummen" Fragen.
 
 ---
 
-## 2. Git-Workflow (verpflichtend)
+## 2. Git-Workflow (minimal)
 
-Unser Projekt lebt von einem **sauberen, nachvollziehbaren Git-Verlauf**. Jede Änderung muss daher diesem Workflow folgen:
+Im Bootcamp nutzen wir den **minimalsten** Git-Workflow:
 
-### 2.1 Nie direkt auf `master` committen
+### 2.1 Du arbeitest direkt auf `main`
 
-Der Branch `master` ist unser produktionsreifer Hauptbranch. **Es ist strikt verboten**, direkt auf `master` zu committen oder zu pushen.
+Keine Feature-Branches, keine Pull Requests, keine Reviews.
+Dein Fork ist **dein** Workspace.
 
-### 2.2 Feature-Branches verwenden
-
-Für jede Änderung – egal ob ein Bugfix, ein neues Feature oder eine Dokumentationsanpassung – erstellst du einen eigenen Branch:
-
-```bash
-# Naming-Konventionen
-feat/kurze-beschreibung      # Neue Features
-fix/kurze-beschreibung       # Bugfixes
-docs/kurze-beschreibung      # Dokumentation
-refactor/kurze-beschreibung  # Code-Refactorings
-chore/kurze-beschreibung     # Setup, Tooling, Konfiguration
-```
-
-**Beispiel:**
+### 2.2 Die 3 Befehle
 
 ```bash
-git checkout -b fix/dark-mode-list-color
+git add .
+git commit -m "Kurze Beschreibung der Aenderung"
+git push
 ```
 
-### 2.3 Commits sinnvoll gestalten
+Mehr nicht. Mehr brauchst du nicht.
 
-- Schreibe aussagekräftige Commit-Nachrichten.
-- Ein Commit sollte eine in sich geschlossene Einheit sein.
-- Vermeide riesige Commits, die mehrere unterschiedliche Themen mischen.
+### 2.3 Commit-Messages
 
-**Gutes Beispiel:**
+Eine kurze, beschreibende Zeile. Beispiele:
 
 ```
-fix(ui): ensure list items are readable in dark mode
+feat(dashboard): Temperatur und Feuchte anzeigen
+fix(status): Farbe der Status-Pille korrigieren
+chore: data.json als Initial-Seed hinzufuegen
 ```
 
-### 2.4 Merge mit `--no-ff`
+Schreibe, **was** du geändert hast (nicht wie).
 
-Wenn dein Feature-Branch fertig ist und getestet wurde, wird er über einen **non-fast-forward Merge** in `master` integriert:
+### 2.4 Haeufige Situationen
 
-```bash
-git checkout master
-git merge --no-ff dein-branch-name -m "Merge branch 'dein-branch-name' into master"
-```
-
-Dadurch bleibt der Verlauf des Branches im Git-Graph sichtbar, was die Nachvollziehbarkeit erheblich verbessert.
-
-### 2.5 Branch nach dem Merge löschen
-
-Sobald ein Branch erfolgreich gemerged wurde, wird er gelöscht:
-
-```bash
-git branch -d dein-branch-name
-```
-
-### 2.6 Kurz zusammengefasst
-
-1. `git checkout -b <branch-name>`
-2. Änderungen vornehmen und testen
-3. `git add <dateien>`
-4. `git commit -m "aussagekräftige nachricht"`
-5. `git checkout master`
-6. `git merge --no-ff <branch-name>`
-7. `git branch -d <branch-name>`
+- **'git push' fragt nach Remote:** Beim ersten Push `git push -u
+  origin main` benutzen.
+- **'Permission denied':** Du hast den Original-Repo geklont statt
+  deinen Fork. Siehe `app/README.md` für die korrekte Anleitung.
+- **'Merge conflict':** Sehr unwahrscheinlich (Einzelarbeit). Falls
+  doch: Trainer fragen.
 
 ---
 
-## 3. Qualitätsanspruch
+## 3. Qualitaetsanspruch
 
 ### 3.1 Testen vor dem Commit
 
-Da wir reines HTML, CSS und JavaScript ohne Build-Tool entwickeln, gibt es **kein** `npm run build`. Stattdem testest du so:
+Da wir reines HTML, CSS und JavaScript ohne Build-Tool
+entwickeln, gibt es **kein** `npm run build`. Stattdessen
+testest du so:
 
-- **App-Code (`app/`)**: Live Server in VS Code starten, Seite im Browser öffnen, F12-Devtools auf Fehler prüfen, manuell durchklicken.
-- **Datenquelle**: Das SuvaSense-Backend wird vom Trainerteam betrieben. Zum lokalen Testen ohne Backend kann der Test-Server aus dem Schwester-Ordner `Test-Frontend/test-server.py` verwendet werden.
-- **Dokumentation (`docs/`)**: Markdown-Renderer (Vorschau in VS Code oder `mkdocs serve` im Schwester-Repo) prüfen.
+- **App-Code (`app/`)**: Live Server in VS Code starten, Seite
+  im Browser öffnen, F12-Devtools auf Fehler pruefen, manuell
+  durchklicken.
+- **Datenquelle**: Das SuvaSense-Backend wird vom Trainerteam
+  betrieben. Zum lokalen Testen ohne Backend kannst du die
+  `data.json` als Initial-Fallback nutzen.
 
 ### 3.2 Sauberkeit
 
-- Sei präzise. Lieber eine kleine, saubere Änderung als ein grosser, halbfertiger Patch.
-- Halte dich an bestehende Patterns: Klassennamen in CSS (`gut`, `kritisch`, `schlecht`), JSON-Feldnamen aus dem API-Vertrag (z. B. `readings.bme680.temp_c`), deutschsprachige Commit-Messages (oder Englisch – aber konsistent).
+- Sei prazise. Lieber eine kleine, saubere Aenderung als ein
+  grosser, halbfertiger Patch.
+- Halte dich an bestehende Patterns: Klassennamen in CSS
+  (`.gut`, `.kritisch`, `.schlecht`), JSON-Feldnamen aus dem
+  API-Vertrag (z. B. `readings.bme680.temp_c`), deutschsprachige
+  Commit-Messages.
+- **Keine Geheimnisse** committen (Passwoerter, API-Keys, interne
+  URLs).
 
-### 3.3 Keine Secrets committen
+### 3.3 Backend nicht veraendern
 
-Tokens, Passwörter, API-Keys oder interne URLs gehören **nicht** ins Repo. Verwende `.env`-Dateien (lokal ausserhalb des Repos) und `.gitignore`. Im Zweifel: beim Trainer nachfragen, bevor etwas eingecheckt wird.
-
-### 3.4 Backend nicht verändern
-
-Das **SuvaSense-Backend** (im Schwester-Repo `SuvaSense`) wird vom Trainerteam verwaltet. Du arbeitest **ausschliesslich** im `app/`-Ordner dieses Repos. Es gibt in diesem Repo **kein** lokales Backend mehr – die App spricht direkt mit SuvaSense.
-
----
-
-## 4. Reagieren auf Änderungswünsche
-
-- Wenn ein Maintainer Feedback oder Änderungswünsche äussert, nimm sie konstruktiv auf.
-- Pushe Korrekturen auf denselben Branch (sofern dieser noch nicht gelöscht wurde) oder erstelle bei grösseren Änderungen einen neuen, sauberen Branch.
-- Frage nach, wenn etwas unklar ist.
+Das **SuvaSense-Backend** (im Schwester-Repo `SuvaSense`) wird
+vom Trainerteam verwaltet. Du arbeitest **ausschliesslich** im
+`app/`-Ordner dieses Repos. Es gibt in diesem Repo **kein**
+lokales Backend mehr – die App spricht direkt mit SuvaSense.
 
 ---
 
-## 5. Inhaltliche Beiträge (Aufgaben & Curriculum)
+## 4. Wo finde ich Hilfe?
 
-- Neue Aufgaben sollten pädagogisch sinnvoll sein und aufeinander aufbauen.
-- Jede Aufgabe benötigt eine klare Struktur mit:
-  1. Kurzer Einleitung
-  2. Präzisen `Anforderungen:`
-  3. Optional einem `Tipp:`
-- Validierungsregeln müssen fair formuliert sein und dem Lernenden bei Fehlern weiterhelfen.
-- Inhaltliche Anpassungen gehören ins Schwester-Repo `ae-raumklima-bootcamp` (MkDocs-Leitfaden), nicht hier.
+In dieser Reihenfolge:
 
----
+1. **[`app/QUELLEN.md`](app/QUELLEN.md)** – W3Schools, MDN
+2. **DevTools (F12)** – Konsole zeigt oft die Antwort
+3. **Trainer fragen** – 1:1, kurz, prazise Frage
 
-## 6. Lizenz
-
-Durch deinen Beitrag stimmst du zu, dass er unter der Lizenz des Projekts veröffentlicht wird.
+**Was NICHT:** KI-Tools (verboten), Mitlernende um Code
+abschreiben (Einzelarbeit).
 
 ---
 
