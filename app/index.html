@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+        <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raumklima Monitor</title>
+   <link rel="stylesheet" href="style.css">
+   <script src="script.js"></script>
+</head>
+<body>
+<div class="header">
+    <h1>Raumklima Monitor</h1>
+</div>
+<div class="card">
+    <div class="value-item">
+        <div class="label">Sensor:</div>
+        <div id="serial-number">SN 33421</div>
+    </div>
+
+    <div class="value-item">
+        <div class="label">Temperatur:</div>
+        <div id="tem-c" class="number">25°C</div> 
+        </div>
+    <div class="value-item">
+        <div class="label">Luftfeuchtigkeit:</div>
+        <div id="hum-pct" class="number">60%</div>
+    </div>
+
+    <div class="value-item">
+        <div class="label">Status:</div>
+        <div id="status" class="status gut">gut</div>
+        <div id="status" class="status kritisch">kritisch</div>
+        <div id="status" class="status schlecht">schlecht</div>
+    </div>
+</div>
+
+<div class="history">
+    <div class="label">Verlauf:</div>
+    <div id="history">Lade Daten...</div>
+</div>
+
+<div class="footer">
+    <p>AE Dashboard Projekt Bootcamp • Raumklima Monitor</p>
+    <p>Erstellt von Lena G. • <a href="https://heiligerg.github.io/ae-raumklima-bootcamp/projekt/ueberblick/" target="_blank">GitHub Projektübersicht</a></p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raumkarte – Übung</title>
+    <style>
+    body {
+    font-family: Arial, sans-serif;
+    background: #f0f4f4;
+    padding: 40px;
+}
+
+.karten-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 280px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #00695c;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 8px;
+}
+
+.wert {
+    font-size: 24px;
+    margin: 12px 0;
+    color: #333;
+}
+
+.status {
+    margin-top: 16px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.gut {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+.kritisch {
+    background: #fff3e0;
+    color: #e65100;
+    border: 1px solid #ffe0b2;
+}
+
+.schlecht {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+}
+
+   </style>
+</head>
+<body>
+    <h1>Raumkarte</h1>
+<div class="card">
+    <div class="karten-grid">
+<!-- Karte B101 -->
+             <h2>Raum B101</h2>
+        <div class="wert">🌡️ 23.4 °C</div>
+        <div class="wert">💧 51 %</div>
+        <div class="status gut">Status: Gut</div>
+
+<!-- Karte B102 -->
+             <h2>Raum B102</h2> 
+        <div class="wert">🌡️ 25.5 °C</div>
+        <div class="wert">💧 45 %</div>
+        <div class="status kritisch">Status: Kritisch</div>
+</div>
+</div>
+</body>
+</html>

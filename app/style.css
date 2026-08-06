@@ -1,0 +1,78 @@
+body{
+    background-color: #cde191f3;
+    font-family: Verdana, sans-serif;
+}
+
+.header{
+    background-color:rgb(151, 164, 109);
+    padding: 5px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.card{
+    background-color: rgb(232, 241, 179);
+    padding:12px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+    margin: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.values{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+}
+
+.value-item{
+   align-items: center;
+}
+
+.label{
+    color: #6f7567;
+    font-weight: 300;
+}
+
+.number{
+    font-weight: 600;
+}
+
+.status{
+    border-radius: 5px;
+    padding: 5px;
+    width: 100px;
+}
+
+.status.gut{
+    background-color: green;
+}
+
+.status.kritisch{
+    background-color: orange;
+}
+
+.status.schlecht{
+    background-color: red;
+}
+
+.history{
+    border-radius: 10px;
+    padding: 10px;
+    background-color: rgb(232, 241, 179);
+    margin: 20px;
+}
+
+.footer{
+    color: #000000;
+    text-align: center;
+    font-size: 12px;
+}
+
+@media (max-width: 600px){
+  .values{
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
