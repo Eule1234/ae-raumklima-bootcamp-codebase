@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raumklima Monitor</title>
    <link rel="stylesheet" href="style.css">
-   <script src="script.js"></script>
+   <script src="script.js" defer></script>
 </head>
 <body>
 <div class="header">
@@ -27,15 +27,11 @@
         <div id="hum-pct" class="number">50</div>
     </div>
 
-    <div class="value-item">
-        <div class="label">Status:</div>
-        <div id="status" class="status gut">gut</div>
-        <div id="status" class="status kritisch">kritisch</div>
-        <div id="status" class="status schlecht">schlecht</div>
-    </div></div>
+</div>
     <div class= "invisible" id="message">
         <p>Lade Daten...</p>
     </div>
+
 </div>
 
 <div class="card">
@@ -43,7 +39,25 @@
     <div id="history">Lade Daten...</div>
 </div>
 
- <button onclick="loadData()">Neu laden</button>
+<div class="card">
+    <div class="value-item">
+    <div class="label">Status:</div>
+    <div id="status-gut">
+    <div id="status" class="status gut">gut</div>
+    </div>
+    <div id="status-kritisch">
+    <div id="status" class="status kritisch">kritisch</div>
+    </div>
+    <div id="status-schlecht">
+    <div id="status" class="status schlecht">schlecht</div>
+    </div>    
+    <div class= "invisible" id="message">
+        <p>Lade Daten...</p>
+    </div>
+    </div>
+</div>
+
+ <button onclick="loadData(); getStatus();">Neu laden</button>
 
 <div class="footer">
     <p>AE Dashboard Projekt Bootcamp • Raumklima Monitor</p>
