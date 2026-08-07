@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daten laden – Übung</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .wert {
+            font-size: 22px;
+            margin: 8px 0;
+        }
+        .laden { color: #999; }
+        .error { color: red; }
+        button {
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: #00695c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Daten laden</h1>
+
+    <div class="card" id="card">
+        <p class="laden">⏳ Lade Daten...</p>
+    </div>
+
+    <button onclick="loadData()">Neu laden</button>
+
+    <script>
+        async function loadData() {
+            const card = document.getElementById('card');
+            card.innerHTML = '';
+
+            try {
+                const response = await fetch('uebung-daten.json');
+                const bundles = await response.json();
+
+                bundles.forEach(bundle => {
+                    const bme = bundle.readings.bme680;
+                    const item = document.createElement('div');
+                    item.innerHTML = `
+                        <p>
+                            ${new Date(bundle.recorded_at).toLocaleTimeString()} –
+                            ${bme.temp_c} °C / ${bme.hum_pct} %
+                        </p>
+                    `;
+                    card.appendChild(item);
+                });
+            } catch (error) {
+                card.innerHTML = '<p class="error">Fehler: Daten konnten nicht geladen werden.</p>';
+                console.error(error);
+            }
+    }
+
+        // Automatisch beim Laden der Seite
+        loadData();
+    </script>
+</body>
+</html>

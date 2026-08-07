@@ -76,3 +76,65 @@ body{
     grid-template-columns: 1fr;
   }
 }
+
+.history-list{
+    display: grid;
+    grid-template-columns: 1fr 1fr ;
+    gap: 10px;
+}
+
+.history-item{
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgb(151, 164, 109);
+}
+
+.history-time{
+    font-size: 12px;
+    color: #23281b;
+}
+
+.history-temp{
+    font-weight: 600;
+}
+
+.history-hum{
+    font-weight: 600;
+}
+
+.history-status{
+    border-radius: 5px;
+    padding: 5px;
+    width: 100px;
+    text-align: center;
+}
+
+.history-status.gut{
+    background-color: green;
+}
+
+.history-status.kritisch{
+    background-color: orange;
+}
+
+.history-status.schlecht{
+    background-color: red;
+}
+
+button {
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: #00695c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.visable{
+    display: block;
+}
+
+.invisible{
+    display: none;
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "recorded_at": "2026-08-06T10:30:00Z",
+    "readings": { "bme680": { "temp_c": 23.4, "hum_pct": 51 } }
+  },
+  {
+    "recorded_at": "2026-08-06T10:29:50Z",
+    "readings": { "bme680": { "temp_c": 23.1, "hum_pct": 52 } }
+  },
+  {
+    "recorded_at": "2026-08-06T10:29:40Z",
+    "readings": { "bme680": { "temp_c": 22.9, "hum_pct": 53 } }
+  }
+]

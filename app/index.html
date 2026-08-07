@@ -11,7 +11,8 @@
 <div class="header">
     <h1>Raumklima Monitor</h1>
 </div>
-<div class="card">
+<div class="card" id="card">
+    <div id="values">
     <div class="value-item">
         <div class="label">Sensor:</div>
         <div id="serial-number">SN 33421</div>
@@ -19,11 +20,11 @@
 
     <div class="value-item">
         <div class="label">Temperatur:</div>
-        <div id="tem-c" class="number">25°C</div> 
+        <div id="tem-c" class="number">23</div> 
         </div>
     <div class="value-item">
         <div class="label">Luftfeuchtigkeit:</div>
-        <div id="hum-pct" class="number">60%</div>
+        <div id="hum-pct" class="number">50</div>
     </div>
 
     <div class="value-item">
@@ -31,13 +32,18 @@
         <div id="status" class="status gut">gut</div>
         <div id="status" class="status kritisch">kritisch</div>
         <div id="status" class="status schlecht">schlecht</div>
+    </div></div>
+    <div class= "invisible" id="message">
+        <p>Lade Daten...</p>
     </div>
 </div>
 
-<div class="history">
+<div class="card">
     <div class="label">Verlauf:</div>
     <div id="history">Lade Daten...</div>
 </div>
+
+ <button onclick="loadData()">Neu laden</button>
 
 <div class="footer">
     <p>AE Dashboard Projekt Bootcamp • Raumklima Monitor</p>

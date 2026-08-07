@@ -1,0 +1,47 @@
+[
+  {
+    "recorded_at": "2026-08-06T10:30:00Z",
+    "readings": {
+      "bme680": {
+        "temp_c": 32.6,
+        "hum_pct": 20
+      }
+    }
+  },
+  {
+    "recorded_at": "2026-08-06T10:29:50Z",
+    "readings": {
+      "bme680": {
+        "temp_c": 33.1,
+        "hum_pct": 50
+      }
+    }
+  },
+  {
+    "recorded_at": "2026-08-06T10:29:40Z",
+    "readings": {
+      "bme680": {
+        "temp_c": 22.9,
+        "hum_pct": 53
+      }
+    }
+  },
+  {
+    "recorded_at": "2026-08-06T10:29:30Z",
+    "readings": {
+      "bme680": {
+        "temp_c": 24.5,
+        "hum_pct": 72
+      }
+    }
+  },
+  {
+    "recorded_at": "2026-08-06T10:29:20Z",
+    "readings": {
+      "bme680": {
+        "temp_c": 25.0,
+        "hum_pct": 49
+      }
+    }
+  }
+]
