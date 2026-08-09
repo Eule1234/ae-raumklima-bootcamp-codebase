@@ -17,12 +17,12 @@ body{
     box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
     margin: 20px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr ;
 }
 
 .values{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
 
 }
 
@@ -70,23 +70,35 @@ body{
     font-size: 12px;
 }
 
-@media (max-width: 600px){
+@media (max-width: 700px){
   .values{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .history-list{
     display: grid;
     grid-template-columns: 1fr;
   }
+  .history-item{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
-.history-list{
+history-list{
     display: grid;
-    grid-template-columns: 1fr 1fr ;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
 
 .history-item{
+    width: 150px;
     padding: 5px;
     border-radius: 5px;
-    background-color: rgb(151, 164, 109);
+    background-color: rgb(232, 241, 179);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap:5px;
 }
 
 .history-time{

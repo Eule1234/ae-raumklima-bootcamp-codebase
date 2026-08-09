@@ -18,7 +18,7 @@
     }
   },
   {
-    "recorded_at": "2026-08-06T10:29:40Z",
+    "recorded_at": "2026-08-06T10:28:40Z",
     "readings": {
       "bme680": {
         "temp_c": 22.9,
@@ -27,7 +27,7 @@
     }
   },
   {
-    "recorded_at": "2026-08-06T10:29:30Z",
+    "recorded_at": "2026-08-06T10:27:30Z",
     "readings": {
       "bme680": {
         "temp_c": 24.5,
@@ -36,7 +36,7 @@
     }
   },
   {
-    "recorded_at": "2026-08-06T10:29:20Z",
+    "recorded_at": "2026-08-06T10:26:20Z",
     "readings": {
       "bme680": {
         "temp_c": 25.0,

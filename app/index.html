@@ -35,9 +35,9 @@
 
 </div>
 
-<div class="card">
+<div class="card" id="history-list">
     <div class="label">Verlauf:</div>
-    <div id="history">Lade Daten...</div>
+    <div id="history-item"></div>
 </div>
 
 <div class="card">
@@ -58,7 +58,7 @@
     </div>
 </div>
 
- <button onclick="loadData(); getStatus();">Neu laden</button>
+ <button onclick="loadData(); getStatus(); loadDashboard();">Neu laden</button>
 
 <div class="footer">
     <p>AE Dashboard Projekt Bootcamp • Raumklima Monitor</p>
