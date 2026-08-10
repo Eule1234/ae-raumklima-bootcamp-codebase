@@ -9,57 +9,79 @@
    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-<div class="header">
-    <h1>Raumklima Monitor</h1>
-</div>
-<div class="card" id="card">
-    <div id="values">
-    <div class="value-item">
-        <div class="label">Sensor:</div>
-        <div id="serial-number">SN 33421</div>
+
+<main>
+    <div class="header">
+        <h1>Raumklima Monitor</h1>
     </div>
 
-    <div class="value-item">
-        <div class="label">Temperatur:</div>
-        <div id="tem-c" class="number">--°C</div> 
+    <section class="dashboard">
+    <div class="card" id="card">
+        <div id="values">
+        <div class="value-item">
+            <div class="label">Sensor:</div>
+            <div id="serial-number">SN 33421</div>
         </div>
-    <div class="value-item">
-        <div class="label">Luftfeuchtigkeit:</div>
-        <div id="hum-pct" class="number">--%</div>
+
+        <div class="value-item">
+            <div class="label">Temperatur:</div>
+            <div id="tem-c" class="number">--°C</div> 
+            </div>
+        <div class="value-item">
+            <div class="label">Luftfeuchtigkeit:</div>
+            <div id="hum-pct" class="number">--%</div>
+        </div>
+
+    </div>
+        <div class= "invisible" id="message">
+            <p>Lade Daten...</p>
+        </div>
+
     </div>
 
-</div>
-    <div class= "invisible" id="message">
-        <p>Lade Daten...</p>
+    <div class="card">
+        <div class="value-item">
+        <div class="label">Status:</div>
+        <div id="status-gut">
+        <div id="status" class="status gut">gut</div>
+        </div>
+        <div id="status-kritisch">
+        <div id="status" class="status kritisch">kritisch</div>
+        </div>
+        <div id="status-schlecht">
+        <div id="status" class="status schlecht">schlecht</div>
+        </div>    
+        <div class= "invisible" id="message">
+            <p>Lade Daten...</p>
+        </div>
+        </div>
     </div>
 
-</div>
-
-<div class="card" id="history-list">
-    <div class="label">Verlauf:</div>
-    <div id="history-item"></div>
-</div>
-
-<div class="card">
-    <div class="value-item">
-    <div class="label">Status:</div>
-    <div id="status-gut">
-    <div id="status" class="status gut">gut</div>
+    <div class="card" id="history-list">
+        <div class="label">Verlauf:</div>
+        <div id="history-item"></div>
     </div>
-    <div id="status-kritisch">
-    <div id="status" class="status kritisch">kritisch</div>
-    </div>
-    <div id="status-schlecht">
-    <div id="status" class="status schlecht">schlecht</div>
-    </div>    
-    <div class= "invisible" id="message">
-        <p>Lade Daten...</p>
-    </div>
-    </div>
-</div>
 
- <button onclick="loadData(); getStatus(); loadDashboard();">Neu laden</button>
-
+    <button onclick="loadData(); getStatus(); loadDashboard(); loadDashboard1();">Neu laden</button>
+</section>
+      <section class="admin-panel">
+                <details>
+                    <summary>Einstellungen</summary>
+                    <div class="admin-content">
+                        <label>
+                            Sensor:
+                            <select id="sensor-select" onchange="onSensorChange()">
+                                <option value="SN12345">SN12345</option>
+                                <option value="SN67890">SN67890</option>
+                                <option value="DEMO-001">DEMO-001</option>
+                            </select>
+                        </label>
+                        <button onclick="loadDashboard1()">Aktualisieren</button>
+                    </div>
+                </details>
+            </section>
+        </section>
+</main>
 <div class="footer">
     <p>AE Dashboard Projekt Bootcamp • Raumklima Monitor</p>
     <p>Erstellt von Lena G. • <a href="https://heiligerg.github.io/ae-raumklima-bootcamp/projekt/ueberblick/" target="_blank">GitHub Projektübersicht</a></p>

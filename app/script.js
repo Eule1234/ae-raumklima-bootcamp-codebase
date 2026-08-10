@@ -1,3 +1,17 @@
+// ---------- Konfiguration ----------
+
+// Im Bootcamp zeigt der Trainer die echte API-URL.
+// Für lokales Testen ohne Backend bleibt API_BASE = ''
+// (dann wird der Snapshot-Fallback genutzt).
+const API_BASE = "";
+
+let currentSerial = "SN12345";
+// ---------- Hilfsfunktionen ----------
+
+function snapshotKey(serial) {
+  return `snapshot:${serial}`;
+}
+
 async function loadData() {
     const valuesDiv = document.getElementById('values');
     valuesDiv.classList.add('invisible');
@@ -32,11 +46,11 @@ async function loadData() {
 
 
     const EDB_Temp_Gut_Min = 20;
-    const EDB_Temp_Gut_Max = 24;
+    const EDB_Temp_Gut_Max = 22;
     const EDB_Temp_Kritisch_Min = 10;
     const EDB_Temp_Kritisch_Max = 20;
-    const EDB_Hum_Gut_Min = 30;
-    const EDB_Hum_Gut_Max = 40;
+    const EDB_Hum_Gut_Min = 40;
+    const EDB_Hum_Gut_Max = 60;
     const EDB_Hum_Kritisch_Min = 10;
     const EDB_Hum_Kritisch_Max = 30;
 
@@ -58,7 +72,7 @@ async function loadData() {
         return StatusGutDiv.classList.remove('invisible');
     }
     else if (tempKritisch && humKritisch) {
-        return StatusKritischDiv.classList.remove('invisible');
+        return  StatusKritischDiv.classList.remove('invisible');
     }
     else {
         return StatusSchlechtDiv.classList.remove('invisible');
@@ -78,14 +92,11 @@ async function loadDashboard() {
         errorMessageDiv.innerHTML = '<p class="error">Fehler: Daten konnten nicht geladen werden.</p>';
         console.error(error);
     }
-        loadDashboard();
 }
 
 function renderHistory(bundles) {
     const container = document.getElementById('history-list'); 
     if (!container) return;
-
-    container.innerHTML = "";
 
     const limitedBundles = bundles.slice(0, 10);
 
@@ -94,25 +105,153 @@ function renderHistory(bundles) {
         item.classList.add('history-item');
 
         const formattedDate = new Date(bundle.recorded_at).toLocaleString('de-DE', {
-            day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+        hour: '2-digit', minute: '2-digit'
         });
 
         const temp_c = bundle.readings?.bme680?.temp_c ?? '--';
         const hum_pct = bundle.readings?.bme680?.hum_pct ?? '--';
 
         item.innerHTML = `
-        <div id="history-time">
+        <div class="history-time">
              <small class="item-meta">${formattedDate} Uhr</small>
         </div>
-        <div id="history-temp">
+        <div class="history-temp">
             <span>${temp_c}°C</span>
         </div>
-        <div id="history-hum">
+        <div class="history-hum">
             <span>${hum_pct}%</span>
         </div>
+        <div class="label">Status:</div>
+        
+        <div class="history-status-gut">
+            <div class="status gut">gut</div>
+        </div>
+        <div class="history-status-kritisch">
+            <div class="status kritisch">kritisch</div>
+        </div>
+        <div class="history-status-schlecht">
+            <div class="status schlecht">schlecht</div>
+        </div> 
         `;
+
+        getHistoryStatus(temp_c, hum_pct, item);
 
         container.appendChild(item);
     });
 }
+    const HistoryEDB_Temp_Gut_Min = 20;
+    const HistoryEDB_Temp_Gut_Max = 22;
+    const HistoryEDB_Temp_Kritisch_Min = 10;
+    const HistoryEDB_Temp_Kritisch_Max = 20;
+    const HistoryEDB_Hum_Gut_Min = 40;
+    const HistoryEDB_Hum_Gut_Max = 60;
+    const HistoryEDB_Hum_Kritisch_Min = 10;
+    const HistoryEDB_Hum_Kritisch_Max = 30;
 
+function getHistoryStatus(temp_c, hum_pct, item) {
+    const HistoryStatusGutDiv = item.querySelector('.history-status-gut');
+    const HistoryStatusKritischDiv = item.querySelector('.history-status-kritisch');
+    const HistoryStatusSchlechtDiv = item.querySelector('.history-status-schlecht');
+
+
+    HistoryStatusGutDiv.classList.add('invisible');
+    HistoryStatusKritischDiv.classList.add('invisible');
+    HistoryStatusSchlechtDiv.classList.add('invisible');
+
+    const tempGut = temp_c >= HistoryEDB_Temp_Gut_Min && temp_c <= HistoryEDB_Temp_Gut_Max;
+    const humGut = hum_pct >= HistoryEDB_Hum_Gut_Min && hum_pct <= HistoryEDB_Hum_Gut_Max;
+    const tempKritisch = temp_c >= HistoryEDB_Temp_Kritisch_Min && temp_c <= HistoryEDB_Temp_Kritisch_Max;
+    const humKritisch = hum_pct >= HistoryEDB_Hum_Kritisch_Min && hum_pct <= HistoryEDB_Hum_Kritisch_Max;
+
+    if (tempGut && humGut) {
+        return HistoryStatusGutDiv.classList.remove('invisible');
+    }
+    else if (tempKritisch && humKritisch) {
+        return HistoryStatusKritischDiv.classList.remove('invisible');
+    }
+    else {
+        return HistoryStatusSchlechtDiv.classList.remove('invisible');
+    }
+}
+async function getBundles(serial, limit = 10) {
+  // 1. Versuch: Live-API (nur wenn API_BASE gesetzt)
+  if (API_BASE) {
+    try {
+      const response = await fetch(
+        `${API_BASE}/sensors/${serial}/readings?page=1&page_size=${limit}`,
+      );
+      if (!response.ok) throw new Error(`API-Fehler: ${response.status}`);
+      const data = await response.json();
+      const items = data.items || [];
+
+      // Erfolg: Snapshot in localStorage aktualisieren
+      try {
+        localStorage.setItem(snapshotKey(serial), JSON.stringify(items));
+      } catch (e) {
+        console.warn("Snapshot konnte nicht gespeichert werden:", e);
+      }
+      return items;
+    } catch (error) {
+      console.warn("API nicht erreichbar, nutze Snapshot:", error);
+    }
+  }
+
+  // 2. Versuch: Snapshot aus localStorage
+  const cached = localStorage.getItem(snapshotKey(serial));
+  if (cached) {
+    try {
+      return JSON.parse(cached);
+    } catch (e) {
+      console.warn("Snapshot kaputt:", e);
+    }
+  }
+
+  // 3. Versuch: Initial-Seed (data.json)
+  try {
+    const response = await fetch("data.json");
+    if (!response.ok) throw new Error("Seed nicht ladbar");
+    return await response.json();
+  } catch (error) {
+    console.error("Auch Seed nicht ladbar:", error);
+    return [];
+  }
+}
+
+async function getLatestBundle(serial) {
+  const bundles = await getBundles(serial, 10);
+  if (bundles.length === 0) throw new Error("Keine Daten verfügbar");
+  return bundles[0];
+}
+
+//Sensor-Auswahl
+function onSensorChange() {
+  currentSerial = document.getElementById("sensor-select").value;
+  loadDashboard1();
+}
+
+// ---------- Dashboard-Loader ----------
+
+async function loadDashboard1() {
+  try {
+    const latest = await getLatestBundle(currentSerial);
+    const bme = latest.readings.bme680;
+
+    document.getElementById("serial-number").textContent = currentSerial;
+    document.getElementById("tem-c").textContent = bme.temp_c + " °C";
+    document.getElementById("hum-pct").textContent = bme.hum_pct + " %";
+
+    const status = getStatus(bme.temp_c, bme.hum_pct);
+    const statusEl = document.getElementById("status");
+    statusEl.textContent = getStatusText(status);
+    statusEl.className = "status " + status;
+
+    const bundles = await getBundles(currentSerial, 10);
+    renderHistory(bundles);
+  } catch (error) {
+    showError();
+    console.error(error);
+  }
+}
+
+// Beim Laden der Seite starten
+loadDashboard1();

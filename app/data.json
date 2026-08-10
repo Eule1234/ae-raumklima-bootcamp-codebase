@@ -43,5 +43,23 @@
         "hum_pct": 49
       }
     }
+  },
+  {
+    "recorded_at": "2026-08-06T10:25:20Z",
+    "readings": {
+      "bme680": {
+        "temp_c": 21.0,
+        "hum_pct": 49
+      }
+    }
+  },
+  {
+    "recorded_at": "2026-08-06T10:25:20Z",
+    "readings": {
+      "bme680": {
+        "temp_c": 15.0,
+        "hum_pct": 20
+      }
+    }
   }
 ]

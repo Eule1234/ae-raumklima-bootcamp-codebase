@@ -20,10 +20,10 @@ body{
     grid-template-columns: 1fr 1fr ;
 }
 
-.values{
+#values{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-
+    gap: 40px;
 }
 
 .value-item{
@@ -81,14 +81,12 @@ body{
   }
   .history-item{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }
 
-history-list{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+#history-list{
+    display: block;
 }
 
 .history-item{
@@ -144,11 +142,51 @@ button {
 }
 
 .visable{
-    display: block;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 }
 
 .invisible{
     display: none;
+}
+
+.admin-panel {
+    background: rgb(174, 193, 127);
+    border-radius: 12px;
+    padding: 16px 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+}
+
+.admin-panel summary {
+    font-weight: bold;
+    color: #1e3503;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.admin-content {
+    margin-top: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.admin-content select {
+    padding: 6px 10px;
+    border: 1px solid #96a75f;
+    border-radius: 4px;
+}
+
+.admin-content button {
+    padding: 6px 16px;
+    background: #00695c;
+    color: rgb(251, 250, 250);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.admin-content button:hover {
+    background: #004d40;
 }
