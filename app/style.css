@@ -93,10 +93,9 @@ body{
     width: 150px;
     padding: 5px;
     border-radius: 5px;
-    background-color: rgb(232, 241, 179);
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap:5px;
+    gap:30px;
 }
 
 .history-time{
@@ -134,7 +133,7 @@ body{
 button {
     margin-top: 12px;
     padding: 8px 16px;
-    background: #00695c;
+    background: #01100e;
     color: white;
     border: none;
     border-radius: 4px;
@@ -160,7 +159,7 @@ button {
 
 .admin-panel summary {
     font-weight: bold;
-    color: #1e3503;
+    color: #070707;
     cursor: pointer;
     padding: 4px 0;
 }
@@ -189,4 +188,31 @@ button {
 
 .admin-content button:hover {
     background: #004d40;
+}
+
+body.dark {
+  background: #1a1a2e;
+  color: #e0e0e0;
+}
+
+body.dark .history-time,
+body.dark .card,
+body.dark .history,
+body.dark .admin-panel {
+  background: #16213e;
+  color: #e0e0e0;
+}
+
+body.dark .admin-panel summary,
+body.dark .footer{
+    color: white;
+}
+
+body.dark .header{
+    background: rgb(48, 48, 78)
+}
+
+body.dark button{
+    color:#000000;
+    background: rgb(168, 164, 164);
 }

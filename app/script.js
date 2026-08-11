@@ -1,15 +1,35 @@
+emailjs.init({
+    publicKey: "phiYwCeBQvQANsWdj"
+});
+
 // ---------- Konfiguration ----------
 
 // Im Bootcamp zeigt der Trainer die echte API-URL.
 // Für lokales Testen ohne Backend bleibt API_BASE = ''
 // (dann wird der Snapshot-Fallback genutzt).
-const API_BASE = "";
+const API_BASE = 'http://192.168.1.186:8080/api/v1';
 
-let currentSerial = "SN12345";
+let currentSerial = '7208r_0001';
 // ---------- Hilfsfunktionen ----------
 
 function snapshotKey(serial) {
   return `snapshot:${serial}`;
+}
+
+async function loadDashboard1() {
+  try {
+    const latest = await getLatestBundle(currentSerial);
+    const bme = latest.readings.bme680;
+
+    document.getElementById("serial-number").textContent = currentSerial;
+    document.getElementById("tem-c").textContent = bme.temp_c.toFixed(1) + " °C";
+    document.getElementById("hum-pct").textContent = bme.hum_pct.toFixed(1) + " %";
+
+    const bundles = await getBundles(currentSerial, 10);
+    renderHistory(bundles);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function loadData() {
@@ -76,30 +96,30 @@ async function loadData() {
     }
     else {
         return StatusSchlechtDiv.classList.remove('invisible');
+        sendWarningEmail()
     }
 
 }
+//async function loadDashboard() {
+    //try {
+       // const response = await fetch('data.json');
+       // const bundles = await response.json();
 
-async function loadDashboard() {
-    try {
-        const response = await fetch('data.json');
-        const bundles = await response.json();
+        //renderHistory(bundles);
 
-        renderHistory(bundles);
+   // } catch (error) {
+        //const errorMessageDiv = document.getElementById('message');
+        //errorMessageDiv.innerHTML = '<p class="error">Fehler: Daten konnten nicht geladen werden.</p>';
+       // console.error(error);
+    //}
+//}
 
-    } catch (error) {
-        const errorMessageDiv = document.getElementById('message');
-        errorMessageDiv.innerHTML = '<p class="error">Fehler: Daten konnten nicht geladen werden.</p>';
-        console.error(error);
-    }
-}
 
 function renderHistory(bundles) {
     const container = document.getElementById('history-list'); 
     if (!container) return;
-
+    container.innerHTML = '<div class="label">Verlauf:</div>';
     const limitedBundles = bundles.slice(0, 10);
-
     limitedBundles.forEach(bundle => {
         const item = document.createElement('div');
         item.classList.add('history-item');
@@ -108,8 +128,8 @@ function renderHistory(bundles) {
         hour: '2-digit', minute: '2-digit'
         });
 
-        const temp_c = bundle.readings?.bme680?.temp_c ?? '--';
-        const hum_pct = bundle.readings?.bme680?.hum_pct ?? '--';
+        const temp_c = bundle.readings?.bme680?.temp_c.toFixed(1) ?? '--';
+        const hum_pct = bundle.readings?.bme680?.hum_pct.toFixed(1) ?? '--';
 
         item.innerHTML = `
         <div class="history-time">
@@ -225,33 +245,41 @@ async function getLatestBundle(serial) {
 
 //Sensor-Auswahl
 function onSensorChange() {
+  console.log("onSensorChange wurde aufgerufen");
   currentSerial = document.getElementById("sensor-select").value;
+  console.log("Ausgelesener Wert:", currentSerial);
+  document.getElementById("serial-number").textContent= currentSerial;
   loadDashboard1();
 }
 
-// ---------- Dashboard-Loader ----------
 
-async function loadDashboard1() {
-  try {
-    const latest = await getLatestBundle(currentSerial);
-    const bme = latest.readings.bme680;
+function toggleTheme() {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
 
-    document.getElementById("serial-number").textContent = currentSerial;
-    document.getElementById("tem-c").textContent = bme.temp_c + " °C";
-    document.getElementById("hum-pct").textContent = bme.hum_pct + " %";
+if (localStorage.getItem('theme') === 'dark') {
+  document.body.classList.add('dark');
+}
 
-    const status = getStatus(bme.temp_c, bme.hum_pct);
-    const statusEl = document.getElementById("status");
-    statusEl.textContent = getStatusText(status);
-    statusEl.className = "status " + status;
+function sendWarningEmail() {
+    const serialNumber = document.getElementById("serial-number").textContent;
+    const temperature = document.getElementById("tem-c").textContent;
+    const humidity = document.getElementById("hum-pct").textContent;
 
-    const bundles = await getBundles(currentSerial, 10);
-    renderHistory(bundles);
-  } catch (error) {
-    showError();
-    console.error(error);
-  }
+    emailjs.send("service_0eankhh", "template_3fqmuzb", {
+        Sensor: serialNumber,
+        Temperatur: temperature,
+        Luftfeuchtigkeit: humidity,
+    })
+    .then(() => {
+        console.log("Warn-E-Mail wurde gesendet!");
+    })
+    .catch((error) => {
+        console.error("Fehler beim Senden der E-Mail:", error);
+    });
 }
 
 // Beim Laden der Seite starten
-loadDashboard1();
+loadDashboard1()

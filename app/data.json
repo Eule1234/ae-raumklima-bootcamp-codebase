@@ -54,7 +54,43 @@
     }
   },
   {
-    "recorded_at": "2026-08-06T10:25:20Z",
+    "recorded_at": "2026-08-06T10:24:20Z",
+    "readings": {
+      "bme680": {
+        "temp_c": 15.0,
+        "hum_pct": 20
+      }
+    }
+  },
+  {
+    "recorded_at": "2026-08-06T10:23:30Z",
+    "readings": {
+      "bme680": {
+        "temp_c": 24.5,
+        "hum_pct": 72
+      }
+    }
+  },
+  {
+    "recorded_at": "2026-08-06T10:22:20Z",
+    "readings": {
+      "bme680": {
+        "temp_c": 25.0,
+        "hum_pct": 49
+      }
+    }
+  },
+  {
+    "recorded_at": "2026-08-06T10:21:20Z",
+    "readings": {
+      "bme680": {
+        "temp_c": 21.0,
+        "hum_pct": 49
+      }
+    }
+  },
+  {
+    "recorded_at": "2026-08-06T10:20:20Z",
     "readings": {
       "bme680": {
         "temp_c": 15.0,

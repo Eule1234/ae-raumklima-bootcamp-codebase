@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raumklima Monitor</title>
    <link rel="stylesheet" href="style.css">
+   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
    <script src="script.js" defer></script>
    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
@@ -13,6 +14,7 @@
 <main>
     <div class="header">
         <h1>Raumklima Monitor</h1>
+        <button id="theme-toggle" onclick="toggleTheme()">Dark Mode</button>
     </div>
 
     <section class="dashboard">
@@ -20,7 +22,7 @@
         <div id="values">
         <div class="value-item">
             <div class="label">Sensor:</div>
-            <div id="serial-number">SN 33421</div>
+            <div id="serial-number">7208r_0001</div>
         </div>
 
         <div class="value-item">
@@ -62,7 +64,7 @@
         <div id="history-item"></div>
     </div>
 
-    <button onclick="loadData(); getStatus(); loadDashboard(); loadDashboard1();">Neu laden</button>
+    <button onclick="loadData(); getStatus(); loadDashboard1();">Neu laden</button>
 </section>
       <section class="admin-panel">
                 <details>
@@ -70,13 +72,14 @@
                     <div class="admin-content">
                         <label>
                             Sensor:
+                        </label>
                             <select id="sensor-select" onchange="onSensorChange()">
-                                <option value="SN12345">SN12345</option>
-                                <option value="SN67890">SN67890</option>
-                                <option value="DEMO-001">DEMO-001</option>
+                                <option value="7208r_0001">7208r_0001</option>
+                                <option value="7208r_0003">7208r_0003</option>
+                                <option value="7208r_0005">7208r_0005</option>
+
                             </select>
                         </label>
-                        <button onclick="loadDashboard1()">Aktualisieren</button>
                     </div>
                 </details>
             </section>
