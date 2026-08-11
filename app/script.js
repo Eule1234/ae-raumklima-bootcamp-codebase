@@ -63,12 +63,12 @@ async function loadData() {
 
     const EDB_Temp_Gut_Min = 20;
     const EDB_Temp_Gut_Max = 22;
-    const EDB_Temp_Kritisch_Min = 10;
-    const EDB_Temp_Kritisch_Max = 20;
+    const EDB_Temp_Kritisch_Min = 22;
+    const EDB_Temp_Kritisch_Max = 26;
     const EDB_Hum_Gut_Min = 40;
     const EDB_Hum_Gut_Max = 60;
-    const EDB_Hum_Kritisch_Min = 10;
-    const EDB_Hum_Kritisch_Max = 30;
+    const EDB_Hum_Kritisch_Min = 60;
+    const EDB_Hum_Kritisch_Max = 65;
 
     function getStatus(temp_c, hum_pct) {
     const StatusGutDiv = document.getElementById('status-gut');
@@ -92,7 +92,7 @@ async function loadData() {
     }
     else {
         StatusSchlechtDiv.classList.remove('invisible');
-        sendWarningEmail()
+        sendWarningEmail();
     }
 
 }
@@ -289,7 +289,7 @@ async function loadDashboard1() {
     const bundles = await getBundles(currentSerial, 10);
     renderHistory(bundles);
 
-    getStatus();
+    getStatus(bme.temp_c, bme.hum_pct);
   } catch (error) {
     console.error(error);
   }
