@@ -16,21 +16,17 @@ function snapshotKey(serial) {
   return `snapshot:${serial}`;
 }
 
-async function loadDashboard1() {
-  try {
-    const latest = await getLatestBundle(currentSerial);
-    const bme = latest.readings.bme680;
+function SnackbarWarnung() {
+  // Get the snackbar DIV
+  var x = document.getElementById("snackbar");
 
-    document.getElementById("serial-number").textContent = currentSerial;
-    document.getElementById("tem-c").textContent = bme.temp_c.toFixed(1) + " °C";
-    document.getElementById("hum-pct").textContent = bme.hum_pct.toFixed(1) + " %";
+  // Add the "show" class to DIV
+  x.className = "show";
 
-    const bundles = await getBundles(currentSerial, 10);
-    renderHistory(bundles);
-  } catch (error) {
-    console.error(error);
-  }
+  // After 3 seconds, remove the show class from DIV
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
+
 
 async function loadData() {
     const valuesDiv = document.getElementById('values');
@@ -95,7 +91,7 @@ async function loadData() {
         return  StatusKritischDiv.classList.remove('invisible');
     }
     else {
-        return StatusSchlechtDiv.classList.remove('invisible');
+        StatusSchlechtDiv.classList.remove('invisible');
         sendWarningEmail()
     }
 
@@ -161,12 +157,12 @@ function renderHistory(bundles) {
 }
     const HistoryEDB_Temp_Gut_Min = 20;
     const HistoryEDB_Temp_Gut_Max = 22;
-    const HistoryEDB_Temp_Kritisch_Min = 10;
-    const HistoryEDB_Temp_Kritisch_Max = 20;
+    const HistoryEDB_Temp_Kritisch_Min = 22;
+    const HistoryEDB_Temp_Kritisch_Max = 26;
     const HistoryEDB_Hum_Gut_Min = 40;
     const HistoryEDB_Hum_Gut_Max = 60;
-    const HistoryEDB_Hum_Kritisch_Min = 10;
-    const HistoryEDB_Hum_Kritisch_Max = 30;
+    const HistoryEDB_Hum_Kritisch_Min = 60;
+    const HistoryEDB_Hum_Kritisch_Max = 65;
 
 function getHistoryStatus(temp_c, hum_pct, item) {
     const HistoryStatusGutDiv = item.querySelector('.history-status-gut');
@@ -220,7 +216,8 @@ async function getBundles(serial, limit = 10) {
   const cached = localStorage.getItem(snapshotKey(serial));
   if (cached) {
     try {
-      return JSON.parse(cached);
+      JSON.parse(cached);
+      SnackbarWarnung()
     } catch (e) {
       console.warn("Snapshot kaputt:", e);
     }
@@ -280,6 +277,25 @@ function sendWarningEmail() {
         console.error("Fehler beim Senden der E-Mail:", error);
     });
 }
+async function loadDashboard1() {
+  try {
+    const latest = await getLatestBundle(currentSerial);
+    const bme = latest.readings.bme680;
 
+    document.getElementById("serial-number").textContent = currentSerial;
+    document.getElementById("tem-c").textContent = bme.temp_c.toFixed(1) + " °C";
+    document.getElementById("hum-pct").textContent = bme.hum_pct.toFixed(1) + " %";
+
+    const bundles = await getBundles(currentSerial, 10);
+    renderHistory(bundles);
+
+    getStatus();
+  } catch (error) {
+    console.error(error);
+  }
+}
+setInterval(() => {
+  loadDashboard1();
+}, 3600000); // 30000 ms = 30 Sekunden
 // Beim Laden der Seite starten
 loadDashboard1()
